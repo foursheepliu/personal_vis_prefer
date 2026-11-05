@@ -47,6 +47,12 @@
       "scope": "canvas.media-card.controls",
       "status": "explicit-user-request",
       "rule": "角上控件尺寸和视觉重量协调；缩放柄不加突出的白色圆底。"
+    },
+    {
+      "id": "media.caption-state",
+      "scope": "canvas.media-card.caption",
+      "status": "explicit-user-request",
+      "rule": "展开/收起状态随卡片保存，切换页面或重新打开后恢复，避免每次重新展开。"
     }
   ],
   "implementation_choices_not_personal_rules": {

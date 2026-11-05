@@ -52,7 +52,10 @@
       "file": "06-selected-space.png",
       "status": "current-awaiting-user-review",
       "build_index_sha256": "080ed527806e6392b1134d4a62c0e521dc795c80dd3e93350f9f2c1f18b5a628",
-      "image_sha256": "8f72f85865a1499eb2e90eb6b50c3564b98c331ecabf3c59de034fd3585a4f5f"
+      "image_sha256": "8f72f85865a1499eb2e90eb6b50c3564b98c331ecabf3c59de034fd3585a4f5f",
+      "detail_file": "06-selected-space-clean.png",
+      "detail_sha256": "5cb4a9e529dda7ade6e1f36d6261b1fb1041a5adf75cef857ea104a06d168b9f",
+      "capture_note": "详情图隐藏宿主画板缩放工具栏，不修改播放器样式；原始采集保留。"
     }
   ],
   "references": [
