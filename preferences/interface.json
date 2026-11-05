@@ -53,6 +53,13 @@
       "scope": "canvas.media-card.caption",
       "status": "explicit-user-request",
       "rule": "展开/收起状态随卡片保存，切换页面或重新打开后恢复，避免每次重新展开。"
+    },
+    {
+      "id": "flowtracker.no-floating-board-toolbar",
+      "scope": "flowtracker.canvas.header",
+      "status": "explicit-user-request",
+      "rule": "去掉画板标题下方的新建文字、图片、附件、文档引用、删除图标所在的整排浮动工具栏。仅针对这个项目和位置，不泛化为禁用所有工具栏。",
+      "source": "projects/flowtracker/history/2026-11-05-canvas-toolbar.md"
     }
   ],
   "implementation_choices_not_personal_rules": {

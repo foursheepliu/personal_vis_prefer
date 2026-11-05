@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-05",
+  "images": [
+    {
+      "file": "00-before-user-reference.png",
+      "kind": "user-provided-reference",
+      "sha256": "b9aff71a799b8cbac761806f0714c3acdcf3459b3784807d17f22b2e0380e429"
+    },
+    {
+      "file": "01-after.png",
+      "kind": "isolated-ui-capture",
+      "workspace": "UI example",
+      "scope": "canvas-header",
+      "sha256": "0bbfef8aff2134f6d899fec0eb554970325878dbd2c8eafe42def6170473c6a7"
+    }
+  ]
+}
