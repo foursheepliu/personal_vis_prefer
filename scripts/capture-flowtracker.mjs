@@ -1,0 +1,34 @@
+// Capture isolated UI examples from locally archived FlowTracker dist folders.
+// No real workspace, notes or project files are opened or changed.
+import {mkdtemp,writeFile,readFile,mkdir,rm} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+const args=process.argv.slice(2);const arg=name=>args[args.indexOf(name)+1];
+if(!args.includes('--electron')||!args.includes('--stages'))throw Error('Usage: node scripts/capture-flowtracker.mjs --electron /path/to/Electron --stages /path/to/local-stages.json [--out directory]');
+const stages=JSON.parse(await readFile(arg('--stages'),'utf8'));const out=path.resolve(args.includes('--out')?arg('--out'):'projects/flowtracker/assets/video-player');await mkdir(out,{recursive:true});
+const temp=await mkdtemp(path.join(tmpdir(),'visual-history-'));
+const fixture={version:1,projects:[{id:'example-project',title:'UI example',canvasNoteId:'example-board'}],notes:[{id:'example-board',projectId:'example-project',title:'UI example',markdown:'',defaultView:'canvas',canvas:{nodes:[{id:'example-video',type:'file',position:{x:200,y:100},width:480,data:{content:{url:'flowtracker://assets/example.webm',filename:'example.webm',mimeType:'video/webm',caption:'视频描述随内容自动调整高度'}}}],edges:[]}}],boards:{}};
+try{
+ await writeFile(path.join(temp,'preload.cjs'),`const {contextBridge}=require('electron');contextBridge.exposeInMainWorld('flowtracker',{loadWorkspace:async()=>(${JSON.stringify(fixture)}),backup:async()=>'',onCloseRequested:()=>()=>{},completeClose:()=>{},documentBlob:async(action)=>action==='list'?[]:null});`);
+ await writeFile(path.join(temp,'main.cjs'),`
+ const {app,BrowserWindow,protocol,net}=require('electron');const fs=require('node:fs/promises');const path=require('node:path');const {pathToFileURL}=require('node:url');
+ app.setPath('userData',${JSON.stringify(path.join(temp,'user-data'))});const stages=${JSON.stringify(stages)};const out=${JSON.stringify(out)};let build;let bytes;
+ protocol.registerSchemesAsPrivileged([{scheme:'flowtracker',privileges:{standard:true,secure:true,supportFetchAPI:true,stream:true,corsEnabled:true}}]);app.commandLine.appendSwitch('autoplay-policy','no-user-gesture-required');
+ app.on('window-all-closed',()=>{});app.whenReady().then(async()=>{
+  protocol.handle('flowtracker',request=>{const url=new URL(request.url);if(url.host==='assets'){const headers={'Content-Type':'video/webm','Access-Control-Allow-Origin':'*','Accept-Ranges':'bytes'};const range=/bytes=(\\d+)-(\\d*)/.exec(request.headers.get('range')||'');if(range){const start=Number(range[1]),end=Math.min(bytes.length-1,range[2]?Number(range[2]):bytes.length-1);return new Response(bytes.subarray(start,end+1),{status:206,headers:{...headers,'Content-Range':'bytes '+start+'-'+end+'/'+bytes.length}});}return new Response(bytes,{headers});}return net.fetch(pathToFileURL(path.join(build,url.pathname==='/'?'index.html':url.pathname)).href);});
+  const record=new BrowserWindow({show:false,webPreferences:{backgroundThrottling:false}});await record.loadURL('data:text/html,<html></html>');
+  bytes=Buffer.from(await record.webContents.executeJavaScript('('+async function(){const c=document.createElement('canvas');c.width=640;c.height=400;const ctx=c.getContext('2d');let tick=0;const paint=()=>{ctx.fillStyle='#191b22';ctx.fillRect(0,0,640,400);ctx.strokeStyle='#383d49';ctx.lineWidth=1;for(let x=0;x<640;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,400);ctx.stroke();}for(let y=0;y<400;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(640,y);ctx.stroke();}ctx.fillStyle='#cbd4de';ctx.beginPath();ctx.arc(320+Math.sin(tick/10)*15,130,16,0,Math.PI*2);ctx.fill();ctx.lineWidth=10;ctx.lineCap='round';ctx.strokeStyle='#cbd4de';ctx.beginPath();ctx.moveTo(320,154);ctx.lineTo(320,230);ctx.moveTo(320,174);ctx.lineTo(280,215);ctx.moveTo(320,174);ctx.lineTo(360,215);ctx.moveTo(320,230);ctx.lineTo(290,295);ctx.moveTo(320,230);ctx.lineTo(350,295);ctx.stroke();tick++;};paint();const stream=c.captureStream(20);const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8'});const chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);const result=new Promise(resolve=>recorder.onstop=async()=>resolve([...new Uint8Array(await new Blob(chunks).arrayBuffer())]));recorder.start();const timer=setInterval(paint,50);await new Promise(r=>setTimeout(r,1200));recorder.stop();clearInterval(timer);stream.getTracks().forEach(t=>t.stop());return result;}+')()'));record.destroy();
+  for(const stage of stages){
+   build=stage.build;const win=new BrowserWindow({show:false,width:1100,height:780,webPreferences:{preload:${JSON.stringify(path.join(temp,'preload.cjs'))},backgroundThrottling:false}});
+   await win.webContents.session.clearStorageData();await win.loadURL('flowtracker://app/');
+   const rect=await win.webContents.executeJavaScript('('+async function(){const wait=async fn=>{for(let i=0;i<200;i++){const value=fn();if(value)return value;await new Promise(r=>setTimeout(r,40));}throw Error('video card did not render');};const video=await wait(()=>document.querySelector('.cv-file-video video'));await wait(()=>video.readyState>=1);if(video.duration>0)video.currentTime=.01;await wait(()=>video.readyState>=2);await video.play();await wait(()=>video.currentTime>.12);video.pause();await new Promise(r=>setTimeout(r,140));const toggle=document.querySelector('button[aria-label="展开视频描述"]');toggle?.click();await new Promise(r=>setTimeout(r,180));document.querySelector('button[aria-label="Fit View"]')?.click();await new Promise(r=>setTimeout(r,450));const card=video.closest('.cv-card');const panel=card.querySelector('.cv-video-caption-panel');const a=card.getBoundingClientRect(),b=panel?.getBoundingClientRect()||a;return {x:Math.max(0,Math.floor(a.left-16)),y:Math.max(0,Math.floor(a.top-16)),width:Math.ceil(Math.max(a.right,b.right)-a.left+32),height:Math.ceil(Math.max(a.bottom,b.bottom)-a.top+32)};}+')()');
+   // Real pointer hover reveals the overlay actions without changing CSS.
+   win.webContents.sendInputEvent({type:'mouseMove',x:rect.x+30,y:rect.y+30});await new Promise(r=>setTimeout(r,180));
+   await fs.writeFile(path.join(out,stage.id+'.png'),(await win.webContents.capturePage(rect)).toPNG());console.log('Captured '+stage.id);win.destroy();
+  }
+  app.exit(0);
+ }).catch(error=>{console.error(error);app.exit(1);});setTimeout(()=>app.exit(2),180000);
+ `);
+ const code=await new Promise((resolve,reject)=>{const child=spawn(path.resolve(arg('--electron')),[path.join(temp,'main.cjs')],{stdio:'inherit'});child.on('error',reject);child.on('exit',resolve);});if(code!==0)throw Error('Capture failed ('+code+')');for(const stage of stages){const bytes=await readFile(path.join(out,stage.id+'.png'));if(bytes.length<1000)throw Error('Empty capture: '+stage.id);}
+}finally{await rm(temp,{recursive:true,force:true});}

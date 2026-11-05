@@ -1,0 +1,65 @@
+{
+  "kind": "isolated-ui-capture",
+  "date": "2026-11-05",
+  "media": "独立生成的网格运动示例，无真实项目内容",
+  "source": "保留的本地FlowTracker构建；最终版来自本轮构建",
+  "limitations": "统一的样例数据与媒体读取环境，仅比较UI；不证明历史版资源读取无故障。原始用户反馈见history文档。",
+  "images": [
+    {
+      "stage": "00-original",
+      "file": "00-original.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "b73411dfb2f864550d96bd6ad11d52924a085c2fdffaaca2fe8ea22cce6ac864",
+      "image_sha256": "b7658a72de24cb980c3b8b0b6cc5776d3a91bc9d4f96a31cc0bf2ffba769e32f"
+    },
+    {
+      "stage": "01-permanent-description",
+      "file": "01-permanent-description.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "caa825d18581840a84ad37e7a4afce4c5b3519a7475e5127b517bc88f55377a5",
+      "image_sha256": "3ccce32773a065397d514e9d1d8855c88ea57d3a4f7050f2574ad8b4a02441ac"
+    },
+    {
+      "stage": "02-floating-description",
+      "file": "02-floating-description.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "1d22c7eb7a6f4e84abf77cd63075ec3826f3b2ea3b8fc1ef8afb3084ec1fbd69",
+      "image_sha256": "0983ce02614ac769023b9a631bf3e012ecf3a5dcb25580a5cce7add50234fc42"
+    },
+    {
+      "stage": "03-attached-description",
+      "file": "03-attached-description.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "8f12d7fbc328952ff4af22fa10bbf343437bb7be428a4bf522f5c993e1cc934b",
+      "image_sha256": "dca7296e26d786e90608287569e2deda3fef50431f0750fcafbe038a1bf3bb9d"
+    },
+    {
+      "stage": "04-clean-hover",
+      "file": "04-clean-hover.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "65e7ebbee5969c8a81264ad55bb73bbd044193a7bc77a8506bf053aebeb5e4fe",
+      "image_sha256": "dca7296e26d786e90608287569e2deda3fef50431f0750fcafbe038a1bf3bb9d"
+    },
+    {
+      "stage": "05-compact-player",
+      "file": "05-compact-player.png",
+      "status": "historical-superseded",
+      "build_index_sha256": "923d0bcf155b4a9d6e91a2e092d255ab97ed7af0518db0be754870a697c48faa",
+      "image_sha256": "75cdf4458e30f56377bbdaa86461c2c4314cfa4f436a61e5dfad2d941cbef5d8"
+    },
+    {
+      "stage": "06-selected-space",
+      "file": "06-selected-space.png",
+      "status": "current-awaiting-user-review",
+      "build_index_sha256": "080ed527806e6392b1134d4a62c0e521dc795c80dd3e93350f9f2c1f18b5a628",
+      "image_sha256": "8f72f85865a1499eb2e90eb6b50c3564b98c331ecabf3c59de034fd3585a4f5f"
+    }
+  ],
+  "references": [
+    {
+      "file": "reference-milanote.png",
+      "kind": "user-provided-reference",
+      "purpose": "描述区直接连接媒体下方的视觉参考"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-05",
+  "language": "zh-CN",
+  "purpose": "跨软件复用用户明确表达的界面与交互偏好；历史版本和实现选择不自动成为偏好。",
+  "source": "projects/flowtracker/decisions/2026-11-05-video-player.md",
+  "review_status": "current_implementation_awaiting_user_review",
+  "rules": [
+    {
+      "id": "media.natural-ratio",
+      "scope": "canvas.media-card",
+      "status": "explicit-user-request",
+      "rule": "媒体按原始比例显示并可等比缩放，避免固定16:9框。"
+    },
+    {
+      "id": "media.caption-trigger",
+      "scope": "canvas.media-card",
+      "status": "explicit-user-request",
+      "rule": "描述入口在媒体左下角；裸线条图标，悬停显现，效果与下载箭头一致。"
+    },
+    {
+      "id": "media.caption-layout",
+      "scope": "canvas.media-card.caption",
+      "status": "explicit-user-request",
+      "rule": "点击入口后直接向下展开相连、等宽的白色区域，再点收起；不使用分离的浮动气泡。"
+    },
+    {
+      "id": "media.caption-text",
+      "scope": "canvas.media-card.caption",
+      "status": "explicit-user-request",
+      "rule": "文字左右居中；高度随内容变化；空白时不显示占位词。"
+    },
+    {
+      "id": "media.no-center-play",
+      "scope": "canvas.video-card",
+      "status": "explicit-user-request",
+      "rule": "不显示中央覆盖式播放按钮。"
+    },
+    {
+      "id": "media.selected-space",
+      "scope": "canvas.video-card",
+      "status": "explicit-user-request",
+      "rule": "单独选中视频后用空格播放或暂停；输入文字和宿主其他场景的快捷键不能被破坏。"
+    },
+    {
+      "id": "media.corner-balance",
+      "scope": "canvas.media-card.controls",
+      "status": "explicit-user-request",
+      "rule": "角上控件尺寸和视觉重量协调；缩放柄不加突出的白色圆底。"
+    }
+  ],
+  "implementation_choices_not_personal_rules": {
+    "caption_font_px": 13,
+    "timeline_height_px": 3,
+    "hover_transition_ms": 160,
+    "note": "这些数值来自当前FlowTracker实现，可随目标软件调整。"
+  },
+  "do_not_generalize": [
+    "描述居中不代表所有正文居中。",
+    "画板单选视频的空格规则不代表全应用统一抢占空格。",
+    "描述区反对浮动气泡不代表所有弹窗都被禁止。"
+  ]
+}
